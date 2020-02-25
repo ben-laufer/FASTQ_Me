@@ -24,7 +24,7 @@ echo "md5sum check"
 cd ${project}/${SLIMSdir}
 if md5sum -c \@md5Sum.md5
 then
-	echo
+    echo
     echo "All files have the correct md5sum"
 else
     echo "ERROR: Some files are corrupt or missing"
