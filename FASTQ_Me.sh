@@ -65,8 +65,7 @@ fi
 echo "Creating a file of unique IDs based on first string from underscore delimiter"
 ls -1 *fastq.gz | \
 awk -F '_' '{print $1}' | \
-sort | \
-uniq > \
+sort -u > \
 task_samples.txt
 
 echo "Printing merge commands"
