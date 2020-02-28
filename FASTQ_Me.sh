@@ -40,8 +40,7 @@ mv Undetermined* Other
 echo "Checking for the right number of unique sample IDs for both R1 and R2"
 countFASTQ(){
 	awk -F '_' '{print $1}' | \
-	sort | \
-	uniq | \
+	sort -u | \
 	wc -l
 }
 export -f countFASTQ
@@ -56,8 +55,7 @@ then
         sort | \
         uniq -c | \
         awk -F ' ' '{print $1}' | \
-        sort | \
-        uniq`
+        sort -u`
         echo "${R1} samples sequenced across ${lanes} lanes identified for merging"
 else
         echo "ERROR: There are ${R1} R1 files and ${R2} R2 files"
@@ -78,7 +76,7 @@ mergeLanesTest(){
 	echo cat ${i}\_*_R2_001.fastq.gz \> ${i}\_2.fq.gz
 }
 export -f mergeLanesTest
-cat task_samples.txt | parallel --will-cite mergeLanesTest
+cat task_samples.txt | parallel --jobs 6 --will-cite mergeLanesTest
 
 echo "Merging ${lanes} lanes for ${R1} samples"
 mergeLanes(){
@@ -87,7 +85,13 @@ mergeLanes(){
 	cat ${i}\_*_R2_001.fastq.gz > ${i}\_2.fq.gz
 }
 export -f mergeLanes
-cat task_samples.txt | parallel --will-cite mergeLanes
+cat task_samples.txt | parallel --jobs 6 --verbose --will-cite  mergeLanes
+
+# Concise merging calls but doesn't make it easy for those who don't use GNU parallel
+#parallel --jobs 6 "echo cat {}_*_R1_001.fastq.gz \> {}\_1.fq.gz" ::: `cat task_samples.txt`
+#parallel --jobs 6 "echo cat {}_*_R2_001.fastq.gz \> {}\_2.fq.gz" ::: `cat task_samples.txt`
+#parallel --jobs 6 --verbose "cat {}_"\*"_R1_001.fastq.gz > {}_1.fq.gz" ::: `cat task_samples.txt`
+#parallel --jobs 6 --verbose "cat {}_"\*"_R2_001.fastq.gz > {}_2.fq.gz" ::: `cat task_samples.txt`
 
 echo "Creating directories for CpG_Me"
 mkdir ../../raw_sequences
