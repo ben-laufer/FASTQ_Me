@@ -2,7 +2,7 @@
 An example script of how to download WGBS data from SLIMS, check md5sums, merge lanes, and submit a project to CpG_Me
 
 ## Use
-Change the arguments in the first lines of the script (lines 3 to 9). You can then run this script section by section in a screen, which allows you to verify the test commands or simply by the following command:
+Change the arguments in the first lines of the script (lines 3 to 9). You can then run the FASTQ_Me script section by section in a screen, which allows you to verify the test commands or simply by the following command:
 
 `FASTQ_Me.sh`
 
